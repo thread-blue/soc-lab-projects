@@ -1,107 +1,124 @@
-# Lab Activity Log
+# 🧠 SOC Lab / Johnny Labs Data Center
+
+![GitHub last commit](https://img.shields.io/github/last-commit/johnnythegra/johnnylabs-soclab?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/johnnythegra/johnnylabs-soclab?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/johnnythegra/johnnylabs-soclab?style=flat-square)
+![GitHub license](https://img.shields.io/github/license/johnnythegra/johnnylabs-soclab?style=flat-square)
+
+> **Repository Purpose:**  
+> Documentation and configuration of Johnny’s self-hosted SOC (Security Operations Center) lab — running on Proxmox VE with network monitoring, AI workloads, and full VLAN isolation.
+
+---
+
+## 📜 Lab Activity Log
 - **2025-08-09** — Added Local Speedtest Server VM under `projects/01-local-speedtest-server`
-- **2025-08-07** — Updated Proxmox to 8.2, enabled 2FA for admin
+- **2025-08-07** — Updated Proxmox to 8.2 and enabled 2FA for admin
 - **2025-08-05** — Integrated Suricata IDS with Wazuh SIEM (initial alert testing)
 - **2025-08-03** — Expanded VLAN segmentation to isolate legacy systems
 - **2025-08-01** — Documented Samsung S25 Ultra thin-client setup in README
 
 ---
 
-## Current Infrastructure
+## ✅ Immediate To-Do
+1. **Document Switch** — record port assignments + VLAN map for Cisco 2960-S  
+2. **Template VM** — finalize Ubuntu base image → Proxmox template  
+3. **GitHub Sync** — configure SSH key and push repo updates  
+4. **ZFS Replication** — automate lux → pve + off-site AWS S3 backups  
+5. **Network Diagram** — finalize topology in `network-topology.md`  
+6. **Monitoring Pipeline** — link Suricata → Wazuh → Dashboard  
+7. **Study Roadmap** — Security+ → AWS SAA → ISO 27001 Implementer  
+8. **Self-Hosted Cloud** — deploy Nextcloud or MinIO on pve  
+9. **Tailscale Policy** — define ACLs for MacBooks + Samsung access  
+10. **Snapshot Automation** — schedule VM snapshots and offload to ZFS backup  
 
-### 📱 WORKSTATION: DEDICATED Samsung Galaxy S25 Ultra  
-(Hardened thin-client setup for remote workloads)
+---
+
+## 🏗️ Current Infrastructure Overview
+
+### 📶 Core Network Stack
+
+| Layer | Device | Role / Notes |
+|:--|:--|:--|
+| **Router** | **Starlink Router** | Internet uplink and default gateway; feeds Cisco switch |
+| **Switch** | **Cisco Catalyst 2960-S** | Managed L2 switch with 802.1Q VLAN tagging; connects both Proxmox nodes |
+| **VPN Mesh** | **Tailscale** | Secure site-to-site mesh between mobile devices and lab |
+| **Management Access** | **2× M1 Max MacBooks** | Access Proxmox via Tailscale using root credentials + 2FA; also handle Sunshine/Moonlight streaming |
+
+**Network Diagram (Simplified):**
+Starlink Router
+↓
+Cisco 2960-S Switch
+├── lux (Main Node)
+├── pve (Backup Node)
+└── LAN Devices / VPN
+---
+
+### 🖥️ Headless Server (Main Compute Node — `lux`)
 
 | Component | Details |
-|---:|---|
-| SoC | Snapdragon 8 Gen 4 |
-| RAM | 12 GB LPDDR5X |
-| Storage | 256 GB UFS 4.0 (OS + apps only) |
-| Display | 6.8" 3120×1440 AMOLED 120 Hz |
-| Secondary Display | 7" portable HDMI/USB-C field monitor (fits in small tablet bag) |
-| Input | Wired keyboard + wired mouse |
-| OS | Android 15 with Samsung Knox Work Profile |
-| VPN | Always-on, AES-256 tunnel to private VLAN |
-| Security Controls | Full-disk encryption, biometric + passphrase, MDM-compatible, remote wipe enabled |
-| Role | SOC/IT thin client to headless server, dual screen in portable form factor |
+|:--|:--|
+| **CPU** | Xeon Gold 5120 → *planned upgrade:* Xeon Gold 6252 |
+| **RAM** | 64 GB DDR4 |
+| **Storage A** | 3 × 500 GB SSD in RAIDZ-1 (~1 TB usable, ZFS encrypted) |
+| **Storage B** | NVMe 256 GB |
+| **Storage C** | 256 GB SATA SSD *(dedicated for offline OS during proctored exams)* |
+| **GPU 1** | Radeon HD 5770 → RTX 4060 Ti (16 GB) |
+| **GPU 2** | GTX 1080 → RTX 3090 (24 GB) |
+| **OS** | Proxmox VE (Type-1 Hypervisor) + Windows 11 VM (isolated) |
+| **Security** | VLAN segmentation, ZFS encryption, 2FA (login), long-form root password |
+| **Access** | Local network IP login + 2FA (no SSH keys currently configured) |
+| **Display** | Single 42″ monitor → *second screen planned* |
+| **Usage** | AI / LLM workloads, Windows gaming VM (Sunshine → Moonlight), offline testing environment |
 
-**Security notes:**
-- Knox profile separates work and personal apps  
+---
+
+### 🖥️ Backup / Storage Node (`pve`)
+
+| Component | Details |
+|:--|:--|
+| **CPU** | i7-950 → *planned upgrade:* Xeon X5670 |
+| **RAM** | 12 GB |
+| **Storage** | 4 × HDD in RAID 10 (~1.8 TB usable) |
+| **Role** | Backups, long-term storage, Proxmox templates |
+| **Notes** | RAID 10 provides redundancy + fast ZFS replication from `lux` |
+
+---
+
+### 📱 Workstation / Thin Client  
+**Device:** Samsung Galaxy S25 Ultra — Hardened Mobile Thin Client
+
+| Component | Details |
+|:--|:--|
+| **OS** | Android 15 + Samsung Knox Work Profile |
+| **VPN** | Always-on AES-256 tunnel (Tailscale endpoint) |
+| **Access** | Requires network + 2FA root login (no SSH keys) |
+| **Display** | Dual-screen setup (6.8″ main + 7″ portable HDMI) |
+| **Role** | Portable SOC / Admin console for Proxmox management |
+
+**Security Notes**
+- Knox profile isolates work vs personal apps  
 - VPN required before server access  
-- SSH keys only (no passwords)  
-- Casting over wired HDMI or WPA3-only private networks  
-- No sideloaded apps, OS always up to date
+- Casting only allowed on wired HDMI or WPA3 LANs  
+- No sideloaded apps / firmware always patched  
 
 ---
 
-### 🖥️ HEADLESS SERVER  
-(Primary compute environment for AI/LLM workloads)
+## 🧰 Software & Security Stack
 
-| Component | Details |
-|---:|---|
-| CPU | Xeon Gold 5120 *(dual planned)* |
-| RAM | 32 GB DDR4 *(64 planned)* |
-| Storage A | 3×500 GB SSD in RAIDZ-1 (~1 TB usable, ZFS encryption enabled) |
-| Storage B | NVMe 256 GB *(OS boot, encrypted)* |
-| GPU 1 | Radeon HD 5770 1 GB *(RTX 4060 Ti 16 GB)* |
-| GPU 2 | Nvidia GTX 1080 8 GB *(RTX 3090 24 GB)* |
-| Motherboard | Dell OEM |
-| OS 1 | Type-1 Hypervisor (Proxmox VE, 2FA for admin) |
-| OS 2 | Windows 11 *(VM - isolated network segment)* |
-| Case | Dell OEM |
-| PSU | Dell OEM 950 W
-
-**Security notes:**
-- Type-1 hypervisor with VLAN network separation  
-- Full disk encryption on all pools  
-- SSH access restricted by IP allowlist  
-- 2FA for hypervisor admin, hardware key for critical ops  
-- Encrypted full backups taken monthly (1TB USB C SSD), additional ad-hoc before major changes
-- GPU passthrough to isolated VMs
+| Layer | Tool | Purpose |
+|:--|:--|:--|
+| **Hypervisor** | **Proxmox VE 8.2** | Type-1 virtualization layer |
+| **Storage** | **ZFS (Encrypted)** | Disk pooling + replication |
+| **Containerization** | **Docker + Compose** | Lightweight service deployment |
+| **IDS / SIEM** | **Suricata + Wazuh** | Network + endpoint monitoring |
+| **DNS Filtering** | **Pi-hole** | Ad + malware blocking |
+| **Monitoring** | **Speedtest VM** | Internal latency and throughput tracking |
+| **VPN Gateway** | **Tailscale** | Secure mesh access for remote devices |
 
 ---
-
-### 🕹️ Legacy Builds
-
-#### 2012/14 “GB1 Gaming Build”
-| Component | Details |
-|---:|---|
-| CPU | (USED) i5-2500 |
-| CPU 2.0 | i5-2500 OC — Corsair H20 620 `//2013` |
-| RAM | (HB1 + USED) 8 GB DDR3 |
-| HDD A | (HB1) 500 GB 2.5" 5200 rpm |
-| HDD B | (HB1) WD Green 2 TB |
-| ~~GPU~~ | ~~(HB1) Radeon HD 6770 1 GB~~ |
-| GPU 2.0 | Radeon HD 7950 3 GB `//2013` |
-| Motherboard | mATX ASUS P8Z77-M PRO (LGA1155) |
-| OS | Windows 7 Pro *(offline only for retro testing)* |
-| Case | NZXT Vulcan Micro-ATX |
-| PSU | (HB1) 550 W Antec VP550P |
-
-#### 2011/12 “HB1 Homework Build” *(first malware sandbox 😅)*
-| Component | Details |
-|---:|---|
-| CPU | AMD Athlon II X2 260 (stock) |
-| RAM | 4 GB DDR3 — CMV4GX3M2A1333C9 |
-| HDD A | (USED) 500 GB 2.5" 5200 rpm |
-| HDD B | WD Green 2 TB — WD20EARX `//2012` |
-| GPU | (USED) Radeon HD 6770 1 GB |
-| Motherboard | mATX ASRock 880GMH-LE (AM3) |
-| OS | Windows 7 Pro *que MIDI theme* |
-| Case | E-waste `~~380w PSU flipped RCD~~` |
-| PSU | 550 W Antec VP550P `//2012`
-
----
-
-📌 **Note**: Legacy systems are physically isolated from main network, used for testing or sandbox work only.
-
-![Screenshot 2025-08-02 at 2 37 32 AM](https://github.com/user-attachments/assets/013ede3d-d133-4e64-bc91-ccaaf8d5a913)  
-![Screenshot 2025-08-02 at 2 59 06 AM](https://github.com/user-attachments/assets/c57979a1-cd7e-4a13-9219-6167c8b51c52)
 
 ## 📂 Folder Structure
-
-```
-home-soc-lab-flump-wazuh/
+johnnylabs-soclab/
 ├── infrastructure/
 │   ├── network-topology.md
 │   ├── hardware-specs.md
@@ -109,17 +126,13 @@ home-soc-lab-flump-wazuh/
 │       └── README.md
 ├── projects/
 │   ├── 01-local-speedtest-server/
-│   │   └── README.md
 │   ├── 02-wazuh-siem/
-│   │   └── README.md
 │   ├── 03-suricata-ids/
-│   │   └── README.md
 │   ├── 04-dns-filter-pihole/
-│   │   └── README.md
 │   └── 05-internal-malware-lab/
-│       └── README.md
-└── docs/
-    ├── lab-roadmap.md
-    ├── security-policies.md
-    └── learning-notes.md
-```
+├── docs/
+│   ├── lab-roadmap.md
+│   ├── security-policies.md
+│   └── learning-notes.md
+└── assets/
+└── screenshots/
