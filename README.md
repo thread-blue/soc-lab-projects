@@ -1,5 +1,3 @@
-# 🧠 SOC Lab / Johnny Labs Data Center
-
 ![GitHub last commit](https://img.shields.io/github/last-commit/johnnythegra/johnnylabs-soclab?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/johnnythegra/johnnylabs-soclab?style=flat-square)
 ![GitHub stars](https://img.shields.io/github/stars/johnnythegra/johnnylabs-soclab?style=flat-square)
