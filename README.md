@@ -1,7 +1,7 @@
-# 🧠 SOC & Cloud Lab / BlueSteel Systems Data Center
+# 🧠 SOC & Cloud Lab / thread-blue Systems Data Center
 
-![GitHub last commit](https://img.shields.io/github/last-commit/bluesteel-systems/soc-cloud-lab?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/bluesteel-systems/soc-cloud-lab?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/thread-blue-systems/soc-cloud-lab?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/thread-blue-systems/soc-cloud-lab?style=flat-square)
 
 **Purpose:**  
 This repository documents the design and automation of a hybrid **SOC + Cloud Architecture Lab**, used for security operations, DevNet automation, and AI experimentation.
@@ -32,7 +32,7 @@ This repository documents the design and automation of a hybrid **SOC + Cloud Ar
 | **Admin Devices** | 2 × M1 Max MacBooks | Proxmox admin + remote streaming via Sunshine/Moonlight |
 Starlink Router
 ↓
-Cisco 2960-S Switch
+Cisco 2960-S Switch (CoreSwitch)
 ├── lux (Main Node)
 ├── pve (Backup Node)
 └── LAN Devices / VPN
@@ -180,7 +180,7 @@ soc-cloud-lab/
 ---
 
 ## 🧩 Summary
-> The **BlueSteel Systems Lab** is a full hybrid environment for applied security, automation, and cloud research.  
+> The **thread-blue Systems Lab** is a full hybrid environment for applied security, automation, and cloud research.  
 > It showcases hands-on capability with:
 > - SOC analysis and threat response  
 > - Infrastructure as Code (IaC) + Automation  
