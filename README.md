@@ -1,8 +1,5 @@
 # 🧠 SOC & Cloud Lab / thread-blue Systems Data Center
 
-![GitHub last commit](https://img.shields.io/github/last-commit/thread-blue-systems/soc-cloud-lab?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/thread-blue-systems/soc-cloud-lab?style=flat-square)
-
 **Purpose:**  
 This repository documents the design and automation of a hybrid **SOC + Cloud Architecture Lab**, used for security operations, DevNet automation, and AI experimentation.
 
@@ -160,7 +157,7 @@ soc-cloud-lab/
 | Phase | Focus | Certifications |
 |:--|:--|:--|
 | **Phase 1** | Core Security + Networking | CompTIA (A+ / N+ / Sec+) ✅ |
-| **Phase 2** | Cloud Architecture | AWS SAA → AWS SAP |
+| **Phase 2** | Cloud Architecture | AWS SAA |
 | **Phase 3** | Network Automation | Cisco DevNet Associate |
 | **Phase 4** | **Bachelor’s Completion + Applied Security** | Final units + AWS SAP + DevNet |
 | **Phase 5** | Advanced Security | Pentest+ → CASP+ → CISM |
